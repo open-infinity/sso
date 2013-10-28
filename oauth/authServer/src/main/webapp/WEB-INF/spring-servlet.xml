@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:ctx="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2
+       http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<ctx:property-override ignore-resource-not-found="true"
+		ignore-unresolvable="true" location="classpath:org.openinfinity.security.properties" />
+
+	<!-- Token services (access token for auth code or refresh token -->
+	<!-- One should be authenticated to proceed to the actual logic -->
+	<!-- The authentication is reconstructed from the auth code or refresh token 
+		by SS -->
+	<!-- So, calling this service should include auth code OAuth info in request -->
+	<http pattern="/oauth/token" create-session="stateless"
+		entry-point-ref="oauthAuthenticationEntryPoint"
+		authentication-manager-ref="clientAuthenticationManager"
+		xmlns="http://www.springframework.org/schema/security">
+		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+		<anonymous enabled="false" />
+		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
+		<access-denied-handler ref="oauthAccessDeniedHandler" />
+	</http>
+
+	<!-- ** NOTE! ** This application contains only Spring Security Settings 
+		for accessing web services to manage tokens. This version assumes OpenInfinity 
+		Valve level security for the authServer. If you are not using Valve level 
+		security, you must secure this web application with Spring Security HERE. 
+		See Spring Security OAuth Extension OAuth2 example on how to do that. -->
+
+	<!-- Following two for error management -->
+	<bean id="oauthAuthenticationEntryPoint"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		<property name="realmName" value="authServer" />
+	</bean>
+
+	<bean id="oauthAccessDeniedHandler"
+		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+
+	<!-- Client authentication manager with user details service to get client 
+		information -->
+	<authentication-manager id="clientAuthenticationManager"
+		xmlns="http://www.springframework.org/schema/security">
+		<authentication-provider user-service-ref="clientDetailsUserService" />
+	</authentication-manager>
+
+	<bean id="clientDetailsUserService"
+		class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+		<constructor-arg ref="clientDetails" />
+	</bean>
+
+	<!-- Token services for token management functionality -->
+	<bean id="tokenServices"
+		class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+		<property name="tokenStore" ref="tokenStore" />
+		<property name="supportRefreshToken" value="true" />
+	</bean>
+
+	<!-- Tokens are stored in a database -->
+	<bean id="tokenStore"
+		class="org.springframework.security.oauth2.provider.token.JdbcTokenStore">
+		<constructor-arg ref="tokenStoreDataSource" />
+	</bean>
+
+	<bean id="tokenStoreDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${tokenStoreDataSource.driverClassName}" />
+		<property name="url" value="${tokenStoreDataSource.url}" />
+		<property name="username" value="${tokenStoreDataSource.username}" />
+		<property name="password" value="${tokenStoreDataSource.password}" />
+	</bean>
+
+	<bean id="clientStoreDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${clientStoreDataSource.driverClassName}" />
+		<property name="url" value="${clientStoreDataSource.url}" />
+		<property name="username" value="${clientStoreDataSource.username}" />
+		<property name="password" value="${clientStoreDataSource.password}" />
+	</bean>
+
+	<oauth:authorization-server
+		client-details-service-ref="clientDetails" token-services-ref="tokenServices"
+		user-approval-handler-ref="userApprovalHandler">
+		<oauth:authorization-code />
+	</oauth:authorization-server>
+
+	<bean id="userApprovalHandler"
+		class="org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler">
+		<property name="tokenServices" ref="tokenServices" />
+	</bean>
+
+	<!-- In-memory version of database for clients allowed to authorize connections. 
+		Not for production use. The example uses this data so either uncomment this 
+		and comment the JDBC version, or make sure that you have the data below in 
+		the OAuth database for the client. Like: mysql> insert into oauth_client_details 
+		(resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, 
+		authorities, access_token_validity, refresh_token_validity, client_id) values 
+		('sampleResource','iwouldnttellyouifiknew','read,write', 'authorization_code',null,'ROLE_CLIENT',null,null,'clientDetails'); 
+		<oauth:client-details-service id="clientDetails"> <oauth:client client-id="sampleClient" 
+		resource-ids="sampleResource" authorized-grant-types="authorization_code" 
+		authorities="ROLE_CLIENT" scope="read,write" secret="iwouldnttellyouifiknew"/> 
+		</oauth:client-details-service> -->
+
+	<!-- Details for clients that are allowed to authorize connections -->
+	<bean id="clientDetails"
+		class="org.springframework.security.oauth2.provider.JdbcClientDetailsService">
+		<constructor-arg ref="clientStoreDataSource" />
+	</bean>
+
+	<mvc:annotation-driven />
+
+	<mvc:default-servlet-handler />
+
+	<sec:global-method-security
+		pre-post-annotations="enabled" proxy-target-class="true">
+		<!--you could also wire in the expression handler up at the layer of the 
+			http filters. See https://jira.springsource.org/browse/SEC-1452 -->
+		<sec:expression-handler ref="oauthExpressionHandler" />
+	</sec:global-method-security>
+
+	<oauth:expression-handler id="oauthExpressionHandler" />
+
+	<oauth:web-expression-handler id="oauthWebExpressionHandler" />
+
+	<!--Basic application beans. -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="accessConfirmationController"
+		class="org.openinfinity.sso.authserver.AccessConfirmationController">
+		<property name="clientDetailsService" ref="clientDetails" />
+	</bean>
+
+</beans>
