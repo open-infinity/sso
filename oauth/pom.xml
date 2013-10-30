@@ -177,7 +177,6 @@
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

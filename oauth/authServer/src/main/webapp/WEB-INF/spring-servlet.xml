@@ -17,6 +17,14 @@
 	<ctx:property-override ignore-resource-not-found="true"
 		ignore-unresolvable="true" location="classpath:org.openinfinity.security.properties" />
 
+	  <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="location" value="classpath:oauth-repository.properties" />
+	    <!-- Allow other PropertyPlaceholderConfigurer to run as well -->
+	    <property name="ignoreUnresolvablePlaceholders" value="true" />
+	  </bean>
+
+
+
 	<!-- Token services (access token for auth code or refresh token -->
 	<!-- One should be authenticated to proceed to the actual logic -->
 	<!-- The authentication is reconstructed from the auth code or refresh token 
