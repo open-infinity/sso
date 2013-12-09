@@ -68,6 +68,7 @@ public class RequestToAttributeMapper {
 		String[] userRoles = ((String) (request.getAttribute(USER_ROLES) != null ? request.getAttribute(USER_ROLES) : null)).split(ROLE_DELIMITER);
 		Identity identity = new Identity();
 		populatePrincipals(username, tenantId, userRoles, identity);
+		identity.setAuthenticated(true);
 		return identity;
 	}
 
