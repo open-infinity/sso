@@ -54,7 +54,6 @@ public class PropertiesUtil {
 		try {
 			LOGGER.info("Reading security vault properties file from the location: " + PROPERTY_FILE_LOCATION);
 			file = new File(PROPERTY_FILE_LOCATION);
-			System.out.println("File location : " + file.getAbsolutePath());
 			fileInputStream = new FileInputStream(file);
 			PROPERTIES = new Properties();
 			PROPERTIES.load(fileInputStream);
