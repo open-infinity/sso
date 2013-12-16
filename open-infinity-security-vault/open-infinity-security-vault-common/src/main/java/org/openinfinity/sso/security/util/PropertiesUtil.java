@@ -18,6 +18,7 @@ package org.openinfinity.sso.security.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.openinfinity.core.util.IOUtil;
 
@@ -30,8 +31,14 @@ import org.openinfinity.core.util.IOUtil;
  */
 public class PropertiesUtil {
 	
-	//"-DsecurityVaultPropertiesLocation=/opt/openinfinity/3.0.0/tomcat/conf/conf.d/securityvault.properties";
-	private static final String PROPERTY_FILE_LOCATION = System.getenv("securityVaultPropertiesLocation");
+	/**
+	 * Logger for the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(PropertiesUtil.class.getName());
+	
+	private static boolean INITIALIZED = false;
+	
+	private static final String PROPERTY_FILE_LOCATION = System.getProperty(GlobalVariables.SECURITY_VAULT_PROPERTIES_FILE_LOCATION);
 	
 	/**
 	 * Properties object for storing key value pairs.
@@ -45,10 +52,13 @@ public class PropertiesUtil {
 		File file = null;
 		FileInputStream fileInputStream = null;
 		try {
+			LOGGER.info("Reading security vault properties file from the location: " + PROPERTY_FILE_LOCATION);
 			file = new File(PROPERTY_FILE_LOCATION);
+			System.out.println("File location : " + file.getAbsolutePath());
 			fileInputStream = new FileInputStream(file);
 			PROPERTIES = new Properties();
 			PROPERTIES.load(fileInputStream);
+			INITIALIZED = true;
 		} catch (Throwable throwable) {
 			IOUtil.closeStream(fileInputStream);
 			if (file != null) {
@@ -64,6 +74,9 @@ public class PropertiesUtil {
 	 * @return String Represents the value corresponding to the key.
 	 */
 	public static String loadValue(String key) {
+		if (!INITIALIZED) 
+			init();
+		LOGGER.info("Retrieving value for [" + key + "]");
 		return PROPERTIES.getProperty(key);
 	}
 

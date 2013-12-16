@@ -25,28 +25,63 @@ package org.openinfinity.sso.security.util;
 public interface GlobalVariables {
 	
 	/**
-	 * Represents the configuration key for session from the properties file.
+	 * Represents the configuration key for attribute based session from the properties file.
 	 */
-	public static final String SESSION_KEY = "sso.session.identifier"; 
+	public static final String ATTRIBUTE_BASED_SESSION_KEY = "sso.attribute.session.identifier"; 
 
 	/**
-	 * Represents the configuration key for username from the properties file.
+	 * Represents the configuration key for attribute based username from the properties file.
 	 */
-	public static final String USERNAME_KEY= "sso.session.username"; 
+	public static final String ATTRIBUTE_BASED_USERNAME_KEY = "sso.attribute.session.username"; 
 
 	/**
-	 * Represents the configuration key for tenant id from the properties file.
+	 * Represents the configuration key for attribute based tenant id from the properties file.
 	 */
-	public static final String TENANT_ID_KEY= "sso.session.tenant.id"; 
+	public static final String ATTRIBUTE_BASED_TENANT_ID_KEY = "sso.attribute.session.tenant.id"; 
 
 	/**
-	 * Represents the configuration key for roles from the properties file.
+	 * Represents the configuration key for attribute based roles from the properties file.
 	 */
-	public static final String ROLES_KEY= "sso.session.roles"; 
+	public static final String ATTRIBUTE_BASED_ROLES_KEY = "sso.attribute.session.roles"; 
+	
+	/**
+	 * Represents the configuration key for header based session from the properties file.
+	 */
+	public static final String HEADER_BASED_SESSION_KEY = "sso.header.session.identifier"; 
+
+	/**
+	 * Represents the configuration key for header based username from the properties file.
+	 */
+	public static final String HEADER_BASED_USERNAME_KEY = "sso.header.session.username"; 
+
+	/**
+	 * Represents the configuration key for header based tenant id from the properties file.
+	 */
+	public static final String HEADER_BASED_TENANT_ID_KEY = "sso.header.session.tenant.id"; 
+
+	/**
+	 * Represents the configuration key for header based roles from the properties file.
+	 */
+	public static final String HEADER_BASED_ROLES_KEY = "sso.header.session.roles"; 
+	
+	/**
+	 * Represents the role delimiter key for attribute based sessions.
+	 */
+	public static final String ATTRIBUTE_BASED_ROLE_DELIMITER = "sso.attribute.session.role.delimiter"; 
+	
+	/**
+	 * Represents the role delimiter key for header based sessions.
+	 */
+	public static final String HEADER_BASED_ROLE_DELIMITER = "sso.header.session.role.delimiter"; 
 	
 	/**
 	 * Represents the configuration key for grid configuration file location from the properties file.
 	 */
 	public static final String GRID_CONFIGURATION_KEY = "sso.session.grid.configuration";
+
+	/**
+	 * Security vault properties location identifier.
+	 */
+	public static final String SECURITY_VAULT_PROPERTIES_FILE_LOCATION = "security.vault.properties.file";
 	
 }

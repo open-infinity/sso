@@ -34,33 +34,33 @@ import static org.openinfinity.sso.security.util.GlobalVariables.*;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class RequestToAttributeMapper implements RequestToIdentityMapper {
+public class RequestToHeaderMapper implements RequestToIdentityMapper {
 	
 	/**
 	 * Delimiter mark for splitting roles from session's attribute.
 	 */
-	private static final String ROLE_DELIMITER = PropertiesUtil.loadValue(ATTRIBUTE_BASED_ROLE_DELIMITER);
+	private static final String ROLE_DELIMITER = PropertiesUtil.loadValue(HEADER_BASED_ROLE_DELIMITER);
 
 	/**
 	 * Represents the username attribute key.
 	 */
-	public static final String USER_NAME = PropertiesUtil.loadValue(ATTRIBUTE_BASED_USERNAME_KEY);
+	public static final String USER_NAME = PropertiesUtil.loadValue(HEADER_BASED_USERNAME_KEY);
 
 	/**
 	 * Represents the tenant's unique identifier attribute key.
 	 */
-	public static final String TENANT_ID = PropertiesUtil.loadValue(ATTRIBUTE_BASED_TENANT_ID_KEY);
+	public static final String TENANT_ID = PropertiesUtil.loadValue(HEADER_BASED_TENANT_ID_KEY);
 	
 	/**
 	 * Represents the user roles attribute key.
 	 */
-	public static final String USER_ROLES = PropertiesUtil.loadValue(ATTRIBUTE_BASED_ROLES_KEY);
+	public static final String USER_ROLES = PropertiesUtil.loadValue(HEADER_BASED_ROLES_KEY);
 	
 	/**
 	 * Represents the prefix for the role.
 	 */
 	private static String ROLE_PREFIX = "ROLE_";
-	
+		
 	/**
 	 * Maps the request attributes to the federated <code>org.openinfinity.core.security.principal.Identity</code> object.
 	 * 
@@ -68,9 +68,9 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 	 * @return <code>org.openinfinity.core.security.principal.Identity</code> Represents the federated identity object in runtime.
 	 */
 	public Identity map(Request request) {
-		String username = (String) (request.getAttribute(USER_NAME) != null ? request.getAttribute(USER_NAME) : null);
-		String tenantId = (String) (request.getAttribute(TENANT_ID) != null ? request.getAttribute(TENANT_ID) : null);
-		String[] userRoles = ((String) (request.getAttribute(USER_ROLES) != null ? request.getAttribute(USER_ROLES) : null)).split(ROLE_DELIMITER);
+		String username = (String) (request.getHeader(USER_NAME) != null ? request.getHeader(USER_NAME) : null);
+		String tenantId = (String) (request.getHeader(TENANT_ID) != null ? request.getHeader(TENANT_ID) : null);
+		String[] userRoles = ((String) (request.getHeader(USER_ROLES) != null ? request.getHeader(USER_ROLES) : null)).split(ROLE_DELIMITER);
 		Identity identity = new Identity();
 		populatePrincipals(username, tenantId, userRoles, identity);
 		identity.setAuthenticated(true);

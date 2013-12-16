@@ -15,6 +15,8 @@
  */
 package org.openinfinity.sso.security.util;
 
+import java.util.logging.Logger;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +30,11 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestUtil {
 	
 	/**
+	 * Logger for this class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RequestUtil.class.getName());
+	
+	/**
 	 * Returns cookie's value with specific cookie name.
 	 * 
 	 * @param name Represents the cookie name.
@@ -35,12 +42,16 @@ public class RequestUtil {
 	 * @return String as the actual cookie value or null if cookie is not found.
 	 */
 	public static String getCookieValue(String name, HttpServletRequest request) {
+		LOGGER.info("Fetching cookie by name [" + name + "]");
 		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie : cookies) {
+			LOGGER.info("Processing cookie by name [" + cookie.getName() + "]");
 			if (cookie.getName().equalsIgnoreCase(name)) {
+				LOGGER.info("Cookie found [" + cookie.getName() + "]");
 				return cookie.getValue();
 			}
 		}
+		LOGGER.info("Cookie not found [" + name + "]");
 		return null;
 	}
 }

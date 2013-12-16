@@ -7,12 +7,24 @@
 		<version>SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>open-infinity-security-vault-valve-integration</artifactId>
+	<artifactId>open-infinity-security-vault-ss-integration</artifactId>
 	<dependencies>
 		<dependency>
 			<artifactId>open-infinity-security-vault-common</artifactId>
 			<groupId>org.openinfinity.sso</groupId>
 			<version>SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>3.1.4.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>3.1.4.RELEASE</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

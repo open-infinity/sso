@@ -18,6 +18,9 @@ package org.openinfinity.sso.security.context.grid;
 import java.io.FileNotFoundException;
 import java.util.concurrent.ConcurrentMap;
 
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleListener;
 import org.openinfinity.core.security.principal.Identity;
 import org.openinfinity.sso.security.util.GlobalVariables;
 import org.openinfinity.sso.security.util.PropertiesUtil;
@@ -37,7 +40,7 @@ import com.hazelcast.core.HazelcastInstance;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class IdentityContext {
+public class IdentityContext implements LifecycleListener {
 
 	/**
 	 * Logger for the class.
@@ -53,16 +56,6 @@ public class IdentityContext {
 	 * Concurrent in-memory datagrid for storing <code>org.openinfinity.core.security.principal.Identity</code> objects.
 	 */
 	private static ConcurrentMap<String, Identity> IN_MEMORY_DATAGRID = null;
-	
-	static {
-		try {
-			Config config = new FileSystemXmlConfig(PropertiesUtil.loadValue(GlobalVariables.GRID_CONFIGURATION_KEY));
-			HazelcastInstance haze = Hazelcast.newHazelcastInstance(config);
-			IN_MEMORY_DATAGRID = haze.getMap(IDENTITY_IDENTIFIER);
-		} catch (FileNotFoundException fileNotFoundException) {
-			LOGGER.error(fileNotFoundException.getMessage(), fileNotFoundException);
-		}	
-	}
 	
 	/**
 	 * Stores the actual <code>org.openinfinity.core.security.principal.Identity</code> object into in-memory datagrid.
@@ -90,6 +83,24 @@ public class IdentityContext {
 	 */
 	public static void clear(String sessionId) {
 		IN_MEMORY_DATAGRID.remove(sessionId);
+	}
+	
+	/**
+	 * Lifecycle listener to start and shutdown an in-memory datagrid for storing <code>org.openinfinity.core.security.principal.Identity</code> objects.
+	 */
+	public void lifecycleEvent(LifecycleEvent event) {
+		if (Lifecycle.START_EVENT.equals(event.getType())) {
+			try {
+				Config config = new FileSystemXmlConfig(PropertiesUtil.loadValue(GlobalVariables.GRID_CONFIGURATION_KEY));
+				HazelcastInstance haze = Hazelcast.newHazelcastInstance(config);
+				IN_MEMORY_DATAGRID = haze.getMap(IDENTITY_IDENTIFIER);
+			} catch (FileNotFoundException fileNotFoundException) {
+				LOGGER.error(fileNotFoundException.getMessage(), fileNotFoundException);
+			}	
+		} else if (Lifecycle.STOP_EVENT.equals(event.getType())) {
+			IN_MEMORY_DATAGRID = null;
+			Hazelcast.shutdownAll();
+		}    
 	}
 	
 }
