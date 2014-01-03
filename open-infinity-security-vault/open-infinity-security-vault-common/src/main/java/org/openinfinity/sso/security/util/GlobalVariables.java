@@ -45,6 +45,11 @@ public interface GlobalVariables {
 	public static final String ATTRIBUTE_BASED_ROLES_KEY = "sso.attribute.session.roles"; 
 	
 	/**
+	 * Represents the attribute based user's session attributes key fetched from the properties file.
+	 */
+	public static final String ATTRIBUTE_BASED_USER_ATTRIBUTES = "sso.attribute.session.attributes"; 
+
+	/**
 	 * Represents the configuration key for header based session from the properties file.
 	 */
 	public static final String HEADER_BASED_SESSION_KEY = "sso.header.session.identifier"; 
@@ -68,17 +73,32 @@ public interface GlobalVariables {
 	 * Represents the role delimiter key for attribute based sessions.
 	 */
 	public static final String ATTRIBUTE_BASED_ROLE_DELIMITER = "sso.attribute.session.role.delimiter"; 
-	
+		
 	/**
 	 * Represents the role delimiter key for header based sessions.
 	 */
 	public static final String HEADER_BASED_ROLE_DELIMITER = "sso.header.session.role.delimiter"; 
 	
 	/**
+	 * Represents the attribute based role delimiter key for user attributes.
+	 */
+	public static final String ATTRIBUTE_BASED_USER_ATTRIBUTE_DELIMITER = "sso.attribute.session.user.attribute.delimiter"; 
+	
+	/**
+	 * Represents the header based role delimiter key for user attributes.
+	 */
+	public static final String HEADER_BASED_USER_ATTRIBUTE_DELIMITER = "sso.header.session.user.attribute.delimiter"; 
+	
+	/**
 	 * Represents the configuration key for grid configuration file location from the properties file.
 	 */
 	public static final String GRID_CONFIGURATION_KEY = "sso.session.grid.configuration";
 
+	/**
+	 * Represents the header based user's session attributes key fetched from the properties file.
+	 */
+	public static final String HEADER_BASED_USER_ATTRIBUTES = "sso.header.session.attributes"; 
+	
 	/**
 	 * Security vault properties location identifier.
 	 */

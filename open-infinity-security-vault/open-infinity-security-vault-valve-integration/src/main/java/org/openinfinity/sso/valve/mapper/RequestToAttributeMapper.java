@@ -15,6 +15,13 @@
  */
 package org.openinfinity.sso.valve.mapper;
 
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_ROLES_KEY;
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_ROLE_DELIMITER;
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_TENANT_ID_KEY;
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_USERNAME_KEY;
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_USER_ATTRIBUTES;
+import static org.openinfinity.sso.security.util.GlobalVariables.ATTRIBUTE_BASED_USER_ATTRIBUTE_DELIMITER;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,8 +31,6 @@ import org.openinfinity.core.security.principal.RolePrincipal;
 import org.openinfinity.core.security.principal.TenantPrincipal;
 import org.openinfinity.core.security.principal.UserPrincipal;
 import org.openinfinity.sso.security.util.PropertiesUtil;
-
-import static org.openinfinity.sso.security.util.GlobalVariables.*;
 
 /**
  * Maps request attributes to <code>org.openinfinity.core.security.principal.Identity</code> object's principals. 
@@ -40,6 +45,11 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 	 * Delimiter mark for splitting roles from session's attribute.
 	 */
 	private static final String ROLE_DELIMITER = PropertiesUtil.loadValue(ATTRIBUTE_BASED_ROLE_DELIMITER);
+	
+	/**
+	 * Delimiter mark for splitting user attributes from session.
+	 */
+	private static final String USER_ATTRIBUTE_DELIMITER = PropertiesUtil.loadValue(ATTRIBUTE_BASED_USER_ATTRIBUTE_DELIMITER);
 
 	/**
 	 * Represents the username attribute key.
@@ -55,6 +65,11 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 	 * Represents the user roles attribute key.
 	 */
 	public static final String USER_ROLES = PropertiesUtil.loadValue(ATTRIBUTE_BASED_ROLES_KEY);
+	
+	/**
+	 * Represents the user attribute keys.
+	 */
+	public static final String USER_ATTRIBUTE_KEYS = PropertiesUtil.loadValue(ATTRIBUTE_BASED_USER_ATTRIBUTES);
 	
 	/**
 	 * Represents the prefix for the role.
@@ -73,6 +88,7 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 		String[] userRoles = ((String) (request.getAttribute(USER_ROLES) != null ? request.getAttribute(USER_ROLES) : null)).split(ROLE_DELIMITER);
 		Identity identity = new Identity();
 		populatePrincipals(username, tenantId, userRoles, identity);
+		populateUserAttributes(request, identity);
 		identity.setAuthenticated(true);
 		return identity;
 	}
@@ -96,4 +112,14 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 		}
 	}
 
+	private void populateUserAttributes(Request request, Identity identity) {
+		String[] splittedAttributesKeys = USER_ATTRIBUTE_KEYS.split(USER_ATTRIBUTE_DELIMITER);
+		for (String attributeKey : splittedAttributesKeys) {
+			String attributeValue = (String) request.getAttribute(attributeKey);
+			if (attributeValue != null) {
+				identity.addAttribute(attributeKey, attributeValue);
+			}
+		}
+	}
+	
 }

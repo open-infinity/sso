@@ -42,6 +42,11 @@ public class RequestToHeaderMapper implements RequestToIdentityMapper {
 	private static final String ROLE_DELIMITER = PropertiesUtil.loadValue(HEADER_BASED_ROLE_DELIMITER);
 
 	/**
+	 * Delimiter mark for splitting user attributes from session.
+	 */
+	private static final String USER_ATTRIBUTE_DELIMITER = PropertiesUtil.loadValue(HEADER_BASED_USER_ATTRIBUTE_DELIMITER);
+	
+	/**
 	 * Represents the username attribute key.
 	 */
 	public static final String USER_NAME = PropertiesUtil.loadValue(HEADER_BASED_USERNAME_KEY);
@@ -55,6 +60,11 @@ public class RequestToHeaderMapper implements RequestToIdentityMapper {
 	 * Represents the user roles attribute key.
 	 */
 	public static final String USER_ROLES = PropertiesUtil.loadValue(HEADER_BASED_ROLES_KEY);
+	
+	/**
+	 * Represents the user attribute keys.
+	 */
+	public static final String USER_ATTRIBUTE_KEYS = PropertiesUtil.loadValue(HEADER_BASED_USER_ATTRIBUTES);
 	
 	/**
 	 * Represents the prefix for the role.
@@ -73,6 +83,7 @@ public class RequestToHeaderMapper implements RequestToIdentityMapper {
 		String[] userRoles = ((String) (request.getHeader(USER_ROLES) != null ? request.getHeader(USER_ROLES) : null)).split(ROLE_DELIMITER);
 		Identity identity = new Identity();
 		populatePrincipals(username, tenantId, userRoles, identity);
+		populateUserAttributes(request, identity);
 		identity.setAuthenticated(true);
 		return identity;
 	}
@@ -96,4 +107,14 @@ public class RequestToHeaderMapper implements RequestToIdentityMapper {
 		}
 	}
 
+	private void populateUserAttributes(Request request, Identity identity) {
+		String[] splittedAttributesKeys = USER_ATTRIBUTE_KEYS.split(USER_ATTRIBUTE_DELIMITER);
+		for (String attributeKey : splittedAttributesKeys) {
+			String attributeValue = (String) request.getHeader(attributeKey);
+			if (attributeValue != null) {
+				identity.addAttribute(attributeKey, attributeValue);
+			}
+		}
+	}
+	
 }
