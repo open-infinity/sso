@@ -7,7 +7,7 @@
 		<version>SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>open-infinity-security-vault-valve-integration</artifactId>
+	<artifactId>open-infinity-security-vault-ss-integration</artifactId>
 	<dependencies>
 		<dependency>
 			<artifactId>open-infinity-security-vault-common</artifactId>
