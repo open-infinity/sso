@@ -1,0 +1,5 @@
+Open Infinity Spring Security common libraries
+
+SNAPSHOT VERSION
+
+mvn clean install
