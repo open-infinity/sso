@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/TAP/!svn/ver/6234/trunk/laboratory/2.0.0/open-infinity-parent/bpmn/src/test/resources/META-INF/spring
+END
+spring-nodeployment-application-context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/svn/TAP/!svn/ver/6234/trunk/laboratory/2.0.0/open-infinity-parent/bpmn/src/test/resources/META-INF/spring/spring-nodeployment-application-context.xml
+END
+spring-test-application-context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/TAP/!svn/ver/6234/trunk/laboratory/2.0.0/open-infinity-parent/bpmn/src/test/resources/META-INF/spring/spring-test-application-context.xml
+END

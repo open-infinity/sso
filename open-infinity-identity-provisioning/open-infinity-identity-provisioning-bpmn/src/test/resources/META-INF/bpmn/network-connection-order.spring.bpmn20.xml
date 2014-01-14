@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		targetNamespace="http://www.bpmnwithactiviti.org"
+		xmlns:activiti="http://activiti.org/bpmn">
+		
+	<process id="network-order-process" name="Order new network connection">
+		<startEvent id="networkOrderEvent" name="Start"/>
+		<sequenceFlow id="validateOrderSequenceflow" name="Validate network order" sourceRef="networkOrderEvent" targetRef="validateNetworkOrderScriptTask"/>
+<!--		<serviceTask id="validateNetworkOrderScriptTask" name="Validate order" activiti:expression="#{networkOrderService.validate(execution)}"/>-->
+		<serviceTask id="validateNetworkOrderScriptTask" name="Validate order" activiti:expression="#{networkOrderValidationService.validate(networkOrder)}"/>
+		<sequenceFlow id="sendingToNetworkSupportPersonnelSequenceFlow" name="Sending to network support personnel" sourceRef="validateNetworkOrderScriptTask" targetRef="configureNetworkConnectionTask"/>
+		<userTask id="configureNetworkConnectionTask" name="Configure network connection">
+			<documentation>Network order configuration user task</documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>ROLE_sales</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+		<sequenceFlow id="configureNetworkConnectionSequenceFlowClosed" name="configureNetworkConnectionSequenceFlowClosed" sourceRef="validateNetworkOrderScriptTask" targetRef="configureNetworkConnectionEndEvent"/>
+		<endEvent id="configureNetworkConnectionEndEvent" name="Support end"/>
+		
+		<sequenceFlow id="reportingToBusinessStakeholdersSequenceFlow" name="Report" sourceRef="validateNetworkOrderScriptTask" targetRef="reportNetworkOrderToBusinessStakeholderTask"/>
+		<userTask id="reportNetworkOrderToBusinessStakeholderTask" name="Report network order to business stakeholders">
+			<documentation>Report to Business stakeholders task</documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>ROLE_sales</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+		<sequenceFlow id="reportNetworkOrderToBusinessStakeholderSequenceFlowClosed" name="reportNetworkOrderToBusinessStakeholderSequenceFlowClosed" sourceRef="reportNetworkOrderToBusinessStakeholderTask" targetRef="reportingToBusinessStakeholdersEndEvent"/>
+		<endEvent id="reportingToBusinessStakeholdersEndEvent" name="Report end"/>
+	</process>
+	
+</definitions>
