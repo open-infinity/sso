@@ -80,9 +80,10 @@ public class RequestToHeaderMapper implements RequestToIdentityMapper {
 	public Identity map(Request request) {
 		String username = (String) (request.getHeader(USER_NAME) != null ? request.getHeader(USER_NAME) : null);
 		String tenantId = (String) (request.getHeader(TENANT_ID) != null ? request.getHeader(TENANT_ID) : null);
-		String[] userRoles = ((String) (request.getHeader(USER_ROLES) != null ? request.getHeader(USER_ROLES) : null)).split(ROLE_DELIMITER);
+		String userRoles = ((String) (request.getHeader(USER_ROLES) != null ? request.getHeader(USER_ROLES) : null));
+		String[] splittedUserRoles = userRoles!=null ? userRoles.split(ROLE_DELIMITER) : null;
 		Identity identity = new Identity();
-		populatePrincipals(username, tenantId, userRoles, identity);
+		populatePrincipals(username, tenantId, splittedUserRoles, identity);
 		populateUserAttributes(request, identity);
 		identity.setAuthenticated(true);
 		return identity;

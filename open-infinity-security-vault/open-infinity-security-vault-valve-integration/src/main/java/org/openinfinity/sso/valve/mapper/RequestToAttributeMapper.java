@@ -85,9 +85,10 @@ public class RequestToAttributeMapper implements RequestToIdentityMapper {
 	public Identity map(Request request) {
 		String username = (String) (request.getAttribute(USER_NAME) != null ? request.getAttribute(USER_NAME) : null);
 		String tenantId = (String) (request.getAttribute(TENANT_ID) != null ? request.getAttribute(TENANT_ID) : null);
-		String[] userRoles = ((String) (request.getAttribute(USER_ROLES) != null ? request.getAttribute(USER_ROLES) : null)).split(ROLE_DELIMITER);
+		String userRoles = ((String) (request.getAttribute(USER_ROLES) != null ? request.getAttribute(USER_ROLES) : null));
+		String[] splittedUserRoles = userRoles!=null ? userRoles.split(ROLE_DELIMITER) : null;
 		Identity identity = new Identity();
-		populatePrincipals(username, tenantId, userRoles, identity);
+		populatePrincipals(username, tenantId, splittedUserRoles, identity);
 		populateUserAttributes(request, identity);
 		identity.setAuthenticated(true);
 		return identity;
