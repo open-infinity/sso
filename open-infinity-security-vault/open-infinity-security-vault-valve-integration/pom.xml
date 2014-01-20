@@ -12,7 +12,7 @@
 		<dependency>
 			<artifactId>open-infinity-security-vault-common</artifactId>
 			<groupId>org.openinfinity.sso</groupId>
-			<version>SNAPSHOT</version>
+			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
