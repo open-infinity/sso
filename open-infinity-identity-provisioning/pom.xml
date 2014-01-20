@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openinfinity.sso</groupId>
 	<artifactId>open-infinity-identity-provisioning</artifactId>
-	<version>SNAPSHOT</version>
+	<version>1.0.0.RELEASE</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>open-infinity-identity-provisioning-common</module>

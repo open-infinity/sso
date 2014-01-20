@@ -3,7 +3,7 @@
   <parent>
     <artifactId>open-infinity-identity-provisioning</artifactId>
     <groupId>org.openinfinity.sso</groupId>
-    <version>SNAPSHOT</version>
+    <version>1.0.0.RELEASE</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>open-infinity-identity-provisioning-common</artifactId>
