@@ -17,6 +17,10 @@
 	<ctx:property-override ignore-resource-not-found="true"
 		ignore-unresolvable="true" location="classpath:org.openinfinity.security.properties" />
 
+        <import resource="classpath*:applicationContext-security.xml" />
+
+
+
 	  <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	    <property name="location" value="classpath:oauth-repository.properties" />
 	    <!-- Allow other PropertyPlaceholderConfigurer to run as well -->
@@ -39,7 +43,23 @@
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
+	
+<!--
+<http xmlns="http://www.springframework.org/schema/security">
+        <intercept-url pattern="/oauth/**" access="ROLE_USER" />
+       <http-basic />
+</http>
 
+
+        <authentication-manager alias="authenticationManager" xmlns="http://www.springframework.org/schema/security">
+                  <authentication-provider>
+                                  <user-service id="userDetailsService">
+                                                          <user name="marissa" password="koala" authorities="ROLE_USER" />
+                                                          <user name="paul" password="emu" authorities="ROLE_USER" />
+                                  </user-service>
+                </authentication-provider>
+        </authentication-manager>	
+-->
 	<!-- ** NOTE! ** This application contains only Spring Security Settings 
 		for accessing web services to manage tokens. This version assumes OpenInfinity 
 		Valve level security for the authServer. If you are not using Valve level 

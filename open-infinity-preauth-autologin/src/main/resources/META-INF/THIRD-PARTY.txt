@@ -1,0 +1,15 @@
+List of third-party dependencies grouped by their license type.
+
+Apache License, Version 2.0 : 
+
+BSD : 
+
+GNU Lesser General Public License : 
+  * Liferay Portal Impl (com.liferay.portal:portal-impl:6.1.0 - http://www.liferay.com/portal-impl)
+  * Liferay Portal Service (com.liferay.portal:portal-service:6.1.0 - http://www.liferay.com/portal-service)
+  * Liferay Util Java (com.liferay.portal:util-java:6.1.0 - http://www.liferay.com/util-java)
+
+Unknown license : 
+  * Java Portlet Specification V2.0 (javax.portlet:portlet-api:2.0 - http://www.jcp.org/en/jsr/detail?id=286)
+  * servlet-api (javax.servlet:servlet-api:2.4 - no url defined)
+  * jsp-api (javax.servlet.jsp:jsp-api:2.0 - no url defined)

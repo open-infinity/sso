@@ -1,0 +1,5 @@
+Open Infinity Liferay Autologin
+
+SNAPSHOT VERSION
+
+mvn clean install
