@@ -1,8 +1,5 @@
 package org.openinfinity.sso.authserver;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -12,6 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Server for managing OAUTH client requests.

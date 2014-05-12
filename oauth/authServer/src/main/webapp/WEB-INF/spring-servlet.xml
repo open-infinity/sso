@@ -31,7 +31,7 @@
 
 	<!-- Token services (access token for auth code or refresh token -->
 	<!-- One should be authenticated to proceed to the actual logic -->
-	<!-- The authentication is reconstructed from the auth code or refresh token 
+	<!-- The authentication is reconstructed from the auth code or refresh token
 		by SS -->
 	<!-- So, calling this service should include auth code OAuth info in request -->
 	<http pattern="/oauth/token" create-session="stateless"
@@ -43,7 +43,7 @@
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
-	
+
 <!--
 <http xmlns="http://www.springframework.org/schema/security">
         <intercept-url pattern="/oauth/**" access="ROLE_USER" />
@@ -58,12 +58,12 @@
                                                           <user name="paul" password="emu" authorities="ROLE_USER" />
                                   </user-service>
                 </authentication-provider>
-        </authentication-manager>	
+        </authentication-manager>
 -->
-	<!-- ** NOTE! ** This application contains only Spring Security Settings 
-		for accessing web services to manage tokens. This version assumes OpenInfinity 
-		Valve level security for the authServer. If you are not using Valve level 
-		security, you must secure this web application with Spring Security HERE. 
+	<!-- ** NOTE! ** This application contains only Spring Security Settings
+		for accessing web services to manage tokens. This version assumes OpenInfinity
+		Valve level security for the authServer. If you are not using Valve level
+		security, you must secure this web application with Spring Security HERE.
 		See Spring Security OAuth Extension OAuth2 example on how to do that. -->
 
 	<!-- Following two for error management -->
@@ -75,7 +75,7 @@
 	<bean id="oauthAccessDeniedHandler"
 		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
 
-	<!-- Client authentication manager with user details service to get client 
+	<!-- Client authentication manager with user details service to get client
 		information -->
 	<authentication-manager id="clientAuthenticationManager"
 		xmlns="http://www.springframework.org/schema/security">
@@ -122,21 +122,57 @@
 		<oauth:authorization-code />
 	</oauth:authorization-server>
 
+    <oauth:client-details-service id="clientDetails2">
+        <oauth:client client-id="sampleClient"
+                      resource-ids="sampleResource"
+                      authorized-grant-types="client_credentials"
+                      authorities="ROLE_CLIENT"
+                      scope="read,write"
+                      secret="iwouldnttellyouifiknew"
+                />
+        <oauth:client client-id="my-trusted-client-with-secret"
+                           authorized-grant-types="password,authorization_code,refresh_token,implicit"
+                           secret="somesecret" authorities="ROLE_CLIENT, ROLE_TRUSTED_CLIENT" />
+        <oauth:client client-id="my-client-with-secret"
+                      authorized-grant-types="client_credentials" authorities="ROLE_CLIENT"
+                      scope="read" secret="secret" />
+        <oauth:client client-id="my-less-trusted-client"
+                      authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT" />
+        <oauth:client client-id="my-less-trusted-autoapprove-client"
+                      authorized-grant-types="implicit" authorities="ROLE_CLIENT" scope="read,write,trust"
+                      autoapprove="true" />
+        <oauth:client client-id="my-client-with-registered-redirect"
+                      authorized-grant-types="authorization_code,client_credentials"
+                      authorities="ROLE_CLIENT" redirect-uri="http://anywhere?key=value"
+                      scope="read,trust" />
+        <oauth:client client-id="my-untrusted-client-with-registered-redirect"
+                      authorized-grant-types="authorization_code" authorities="ROLE_CLIENT"
+                      redirect-uri="http://anywhere" scope="read" />
+        <oauth:client client-id="tonr" resource-ids="sparklr"
+                      authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT"
+                      scope="read,write" secret="secret" />
+        <oauth:client client-id="tonr-with-redirect"
+                      resource-ids="sparklr" authorized-grant-types="authorization_code,implicit"
+                      authorities="ROLE_CLIENT" scope="read,write" secret="secret"
+                      redirect-uri="${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}" />
+    </oauth:client-details-service>
+
+
 	<bean id="userApprovalHandler"
 		class="org.springframework.security.oauth2.provider.approval.TokenServicesUserApprovalHandler">
 		<property name="tokenServices" ref="tokenServices" />
 	</bean>
 
-	<!-- In-memory version of database for clients allowed to authorize connections. 
-		Not for production use. The example uses this data so either uncomment this 
-		and comment the JDBC version, or make sure that you have the data below in 
-		the OAuth database for the client. Like: mysql> insert into oauth_client_details 
-		(resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, 
-		authorities, access_token_validity, refresh_token_validity, client_id) values 
-		('sampleResource','iwouldnttellyouifiknew','read,write', 'authorization_code',null,'ROLE_CLIENT',null,null,'clientDetails'); 
-		<oauth:client-details-service id="clientDetails"> <oauth:client client-id="sampleClient" 
-		resource-ids="sampleResource" authorized-grant-types="authorization_code" 
-		authorities="ROLE_CLIENT" scope="read,write" secret="iwouldnttellyouifiknew"/> 
+	<!-- In-memory version of database for clients allowed to authorize connections.
+		Not for production use. The example uses this data so either uncomment this
+		and comment the JDBC version, or make sure that you have the data below in
+		the OAuth database for the client. Like: mysql> insert into oauth_client_details
+		(resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri,
+		authorities, access_token_validity, refresh_token_validity, client_id) values
+		('sampleResource','iwouldnttellyouifiknew','read,write', 'authorization_code',null,'ROLE_CLIENT',null,null,'clientDetails');
+		<oauth:client-details-service id="clientDetails"> <oauth:client client-id="sampleClient"
+		resource-ids="sampleResource" authorized-grant-types="authorization_code"
+		authorities="ROLE_CLIENT" scope="read,write" secret="iwouldnttellyouifiknew"/>
 		</oauth:client-details-service> -->
 
 	<!-- Details for clients that are allowed to authorize connections -->
@@ -151,7 +187,7 @@
 
 	<sec:global-method-security
 		pre-post-annotations="enabled" proxy-target-class="true">
-		<!--you could also wire in the expression handler up at the layer of the 
+		<!--you could also wire in the expression handler up at the layer of the
 			http filters. See https://jira.springsource.org/browse/SEC-1452 -->
 		<sec:expression-handler ref="oauthExpressionHandler" />
 	</sec:global-method-security>

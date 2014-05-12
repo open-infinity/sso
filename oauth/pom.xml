@@ -6,7 +6,7 @@
 	<artifactId>oauth</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0.RELEASE</version>
-	<name>OAUth Provider</name>
+	<name>OAuth Provider</name>
 	<url>http://maven.apache.org</url>
 
 	<modules>
@@ -32,6 +32,13 @@
 					<include>**/*.xml</include>
 				</includes>
 			</resource>
+    	    <resource>
+      	        <directory>src/main/resources/META-INF/properties/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+      	    </resource>
 		</resources>
 
 		<plugins>
@@ -197,7 +204,11 @@
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -215,6 +226,6 @@
 			<id>java.net</id>
 			<url>http://download.java.net/maven/2</url>
 		</repository>
-	</repositories>
+    </repositories>
 
 </project>

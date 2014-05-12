@@ -8,7 +8,7 @@
     <artifactId>authServer</artifactId>
     <packaging>war</packaging>
     <version>1.0.0.RELEASE</version>
-    <name>OAUth Authorization Server</name>
+    <name>OAuth Authorization Server</name>
 
     <parent>
         <groupId>org.openinfinity.sso</groupId>
@@ -17,6 +17,7 @@
     </parent>
 
     <build>
+	<finalName>oauth</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -86,10 +87,12 @@
                                         <groupId>commons-codec</groupId>
                                         <artifactId>commons-codec</artifactId>
                                 </exclusion>
+                            <!--
                                 <exclusion>
                                         <groupId>commons-logging</groupId>
                                         <artifactId>commons-logging</artifactId>
                                 </exclusion>
+                               -->
                                 <exclusion>
                                         <groupId>org.codehaus.jackson</groupId>
                                         <artifactId>jackson-core-asl</artifactId>
@@ -120,5 +123,12 @@
                                 </exclusion>
                         </exclusions>	    
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
     </dependencies>
 </project>

@@ -1,0 +1,24 @@
+
+# ignore maven build stuff
+target/
+
+# ignore Eclipse metadata
+.settings/
+.project
+.classpath
+
+# ignore IDEA metadata
+*.iml
+.idea/
+
+# ignore generated logs
+*.log
+
+# ignore generated process id files
+*.pid
+
+# ignore Apple metadata
+.DS_Store
+
+# ignore Spring IDE metadata
+.springBeans
