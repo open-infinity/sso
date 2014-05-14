@@ -78,22 +78,31 @@
             <artifactId>spring-security-taglibs</artifactId>
             <scope>provided</scope>
         </dependency>
+       
 
-        <dependency>
+         <dependency>
+	            <groupId>org.springframework</groupId>
+	            <artifactId>spring-context</artifactId>
+	            <scope>provided</scope>
+                <version>3.1.4.RELEASE</version>
+	            
+         </dependency>
+         <dependency>
+            
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
+           
                         <exclusions>
                                 <exclusion>
                                         <groupId>commons-codec</groupId>
                                         <artifactId>commons-codec</artifactId>
                                 </exclusion>
-                            <!--
-                                <exclusion>
+                           
+                                <!-- >exclusion>
                                         <groupId>commons-logging</groupId>
                                         <artifactId>commons-logging</artifactId>
-                                </exclusion>
-                               -->
-                                <exclusion>
+                                </exclusion-->
+                                                               <exclusion>
                                         <groupId>org.codehaus.jackson</groupId>
                                         <artifactId>jackson-core-asl</artifactId>
                                 </exclusion>
@@ -109,10 +118,11 @@
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-beans</artifactId>
                                 </exclusion>
-                                <exclusion>
+                                <!-- exclusion>
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-context</artifactId>
-                                </exclusion>
+                                </exclusion-->
+                                
                                 <exclusion>
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-core</artifactId>
@@ -121,7 +131,8 @@
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-expression</artifactId>
                                 </exclusion>
-                        </exclusions>	    
+                        </exclusions>	
+                        
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

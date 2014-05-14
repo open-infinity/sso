@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.apache.log4j.Logger;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,6 +24,8 @@ import java.util.TreeMap;
 @Controller
 @SessionAttributes(types = AuthorizationRequest.class)
 public class AccessConfirmationController {
+    
+    private static final Logger logger = Logger.getLogger(AccessConfirmationController.class);
 
     private ClientDetailsService clientDetailsService;
 
@@ -46,5 +49,5 @@ public class AccessConfirmationController {
         model.put("client", clientDetails);
         return new ModelAndView("access_confirmation", model);
     }
-    
+        
 }

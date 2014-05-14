@@ -6,13 +6,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2
        http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
 		http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security-3.1.xsd
 		http://www.springframework.org/schema/context
-		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
 		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
 	<ctx:property-override ignore-resource-not-found="true"
 		ignore-unresolvable="true" location="classpath:org.openinfinity.security.properties" />
@@ -43,10 +43,12 @@
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
+<http pattern="/test" security="none"
+        xmlns="http://www.springframework.org/schema/security" />
 
-<!--
+<!-- 
 <http xmlns="http://www.springframework.org/schema/security">
-        <intercept-url pattern="/oauth/**" access="ROLE_USER" />
+        <intercept-url pattern="/oauth/test/**" access="ROLE_USER" />
        <http-basic />
 </http>
 
@@ -59,7 +61,7 @@
                                   </user-service>
                 </authentication-provider>
         </authentication-manager>
--->
+        -->
 	<!-- ** NOTE! ** This application contains only Spring Security Settings
 		for accessing web services to manage tokens. This version assumes OpenInfinity
 		Valve level security for the authServer. If you are not using Valve level
@@ -120,6 +122,7 @@
 		client-details-service-ref="clientDetails" token-services-ref="tokenServices"
 		user-approval-handler-ref="userApprovalHandler">
 		<oauth:authorization-code />
+		<oauth:client-credentials />
 	</oauth:authorization-server>
 
     <oauth:client-details-service id="clientDetails2">
@@ -138,9 +141,11 @@
                       scope="read" secret="secret" />
         <oauth:client client-id="my-less-trusted-client"
                       authorized-grant-types="authorization_code,implicit" authorities="ROLE_CLIENT" />
+        <!--  
         <oauth:client client-id="my-less-trusted-autoapprove-client"
                       authorized-grant-types="implicit" authorities="ROLE_CLIENT" scope="read,write,trust"
                       autoapprove="true" />
+                      -->
         <oauth:client client-id="my-client-with-registered-redirect"
                       authorized-grant-types="authorization_code,client_credentials"
                       authorities="ROLE_CLIENT" redirect-uri="http://anywhere?key=value"
