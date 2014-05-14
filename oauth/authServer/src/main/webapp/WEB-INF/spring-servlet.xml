@@ -120,6 +120,7 @@
 		client-details-service-ref="clientDetails" token-services-ref="tokenServices"
 		user-approval-handler-ref="userApprovalHandler">
 		<oauth:authorization-code />
+		<oauth:client-credentials />
 	</oauth:authorization-server>
 
 	<bean id="userApprovalHandler"

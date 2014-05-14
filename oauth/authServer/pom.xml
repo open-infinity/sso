@@ -17,6 +17,7 @@
     </parent>
 
     <build>
+	<finalName>oauth</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
