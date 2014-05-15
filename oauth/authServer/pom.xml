@@ -4,10 +4,8 @@
          http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.openinfinity.sso</groupId>
     <artifactId>authServer</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0.RELEASE</version>
     <name>OAUth Authorization Server</name>
 
     <parent>
@@ -34,8 +32,12 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!--
         <dependency>
@@ -45,38 +47,31 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -87,10 +82,10 @@
                                         <groupId>commons-codec</groupId>
                                         <artifactId>commons-codec</artifactId>
                                 </exclusion>
-                                <exclusion>
+                                <!-- exclusion>
                                         <groupId>commons-logging</groupId>
                                         <artifactId>commons-logging</artifactId>
-                                </exclusion>
+                                </exclusion-->
                                 <exclusion>
                                         <groupId>org.codehaus.jackson</groupId>
                                         <artifactId>jackson-core-asl</artifactId>
@@ -107,10 +102,11 @@
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-beans</artifactId>
                                 </exclusion>
-                                <exclusion>
+                                
+                                <!-- exclusion>
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-context</artifactId>
-                                </exclusion>
+                                </exclusion-->
                                 <exclusion>
                                         <groupId>org.springframework</groupId>
                                         <artifactId>spring-core</artifactId>
