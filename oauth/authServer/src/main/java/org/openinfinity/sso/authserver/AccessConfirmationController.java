@@ -19,9 +19,18 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Mika Salminen
  * @author Ilkka Leinonen
  *
+ *
+ *import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.provider.AuthorizationRequest;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
-@SessionAttributes(types = AuthorizationRequest.class)
+@SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
 
     private ClientDetailsService clientDetailsService;
@@ -40,10 +49,15 @@ public class AccessConfirmationController {
      */
     @RequestMapping("/oauth/confirm_access")
     public ModelAndView getAccessConfirmation(@ModelAttribute AuthorizationRequest authorizationRequest) throws Exception {
+        System.out.println("JIIIHAAA, confirm access called!!!.");
+
         ClientDetails clientDetails = clientDetailsService.loadClientByClientId(authorizationRequest.getClientId());
         Map<String, Object> model = new TreeMap<String, Object>();
         model.put("auth_request", authorizationRequest);
+        
         model.put("client", clientDetails);
+        System.out.println("JIIIHAAA, sending form to user agent!");
+
         return new ModelAndView("access_confirmation", model);
     }
     

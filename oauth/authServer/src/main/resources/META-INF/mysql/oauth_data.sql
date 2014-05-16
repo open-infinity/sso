@@ -1,0 +1,2 @@
+insert into oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, authorities) values('sampleClientCC', 'sampleResource', 'secret', 'read', 'client_credentials', 'ROLE_USER');
+insert into oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types, authorities) values('sampleClientAC', 'sampleResource', 'secret', 'read', 'authorization_code', 'ROLE_USER');

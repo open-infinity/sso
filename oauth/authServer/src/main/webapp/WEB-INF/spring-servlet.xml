@@ -19,8 +19,6 @@
 
         <import resource="classpath*:applicationContext-security.xml" />
 
-
-
 	  <bean id="dbProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	    <property name="location" value="classpath:oauth-repository.properties" />
 	    <!-- Allow other PropertyPlaceholderConfigurer to run as well -->
@@ -43,6 +41,17 @@
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
+	
+	<http access-denied-page="/login.jsp?authorization_error=true" disable-url-rewriting="true"
+        xmlns="http://www.springframework.org/schema/security">
+        <intercept-url pattern="/oauth/**" access="ROLE_USER" />
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+
+        <form-login authentication-failure-url="/login.jsp?authentication_error=true" default-target-url="/index.jsp"
+            login-page="/login.jsp" login-processing-url="/login.do" />
+        <logout logout-success-url="/index.jsp" logout-url="/logout.do" />
+        <anonymous />
+    </http>
 	
 <!--
 <http xmlns="http://www.springframework.org/schema/security">
@@ -81,7 +90,25 @@
 		xmlns="http://www.springframework.org/schema/security">
 		<authentication-provider user-service-ref="clientDetailsUserService" />
 	</authentication-manager>
-
+    
+    <!-- User authentication manager -->  
+    <authentication-manager id="userAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
+        <authentication-provider>
+            <jdbc-user-service data-source-ref="usersDataSource"/>
+        </authentication-provider>
+    </authentication-manager>
+    
+    <!-- Test users (OAuth2 Resource owner) authentication manager.
+        Used only for test applications - sampleClient and sampleResource
+    --> 
+    <authentication-manager id="testAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
+        <authentication-provider>
+            <user-service id="userDetailsService">
+                <user name="oi" password="secret" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+    
 	<bean id="clientDetailsUserService"
 		class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
 		<constructor-arg ref="clientDetails" />
@@ -115,6 +142,14 @@
 		<property name="username" value="${clientStoreDataSource.username}" />
 		<property name="password" value="${clientStoreDataSource.password}" />
 	</bean>
+	
+	<bean id="userStoreDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="${userStoreDataSource.driverClassName}" />
+        <property name="url" value="${userStoreDataSource.url}" />
+        <property name="username" value="${userStoreDataSource.username}" />
+        <property name="password" value="${userStoreDataSource.password}" />
+    </bean>
 
 	<oauth:authorization-server
 		client-details-service-ref="clientDetails" token-services-ref="tokenServices"
