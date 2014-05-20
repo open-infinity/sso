@@ -25,8 +25,6 @@
 	    <property name="ignoreUnresolvablePlaceholders" value="true" />
 	  </bean>
 
-
-
 	<!-- Token services (access token for auth code or refresh token -->
 	<!-- One should be authenticated to proceed to the actual logic -->
 	<!-- The authentication is reconstructed from the auth code or refresh token 
@@ -34,11 +32,14 @@
 	<!-- So, calling this service should include auth code OAuth info in request -->
 	<http pattern="/oauth/token" create-session="stateless"
 		entry-point-ref="oauthAuthenticationEntryPoint"
-		authentication-manager-ref="clientAuthenticationManager"
+		authentication-manager-ref="authenticationManager"
 		xmlns="http://www.springframework.org/schema/security">
 		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
+		<!-- include this only if you need to authenticate clients via request parameters -->
+		<!-- Used with grant type Password -->
+        <custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
 	
@@ -53,22 +54,6 @@
         <anonymous />
     </http>
 	
-<!--
-<http xmlns="http://www.springframework.org/schema/security">
-        <intercept-url pattern="/oauth/**" access="ROLE_USER" />
-       <http-basic />
-</http>
-
-
-        <authentication-manager alias="authenticationManager" xmlns="http://www.springframework.org/schema/security">
-                  <authentication-provider>
-                                  <user-service id="userDetailsService">
-                                                          <user name="marissa" password="koala" authorities="ROLE_USER" />
-                                                          <user name="paul" password="emu" authorities="ROLE_USER" />
-                                  </user-service>
-                </authentication-provider>
-        </authentication-manager>	
--->
 	<!-- ** NOTE! ** This application contains only Spring Security Settings 
 		for accessing web services to manage tokens. This version assumes OpenInfinity 
 		Valve level security for the authServer. If you are not using Valve level 
@@ -83,32 +68,22 @@
 
 	<bean id="oauthAccessDeniedHandler"
 		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
-
-	<!-- Client authentication manager with user details service to get client 
-		information -->
-	<authentication-manager id="clientAuthenticationManager"
-		xmlns="http://www.springframework.org/schema/security">
-		<authentication-provider user-service-ref="clientDetailsUserService" />
-	</authentication-manager>
     
-    <!-- User authentication manager -->  
-    <authentication-manager id="userAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
-        <authentication-provider>
-            <jdbc-user-service data-source-ref="usersDataSource"/>
-        </authentication-provider>
-    </authentication-manager>
+    <bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+    </bean>
     
-    <!-- Test users (OAuth2 Resource owner) authentication manager.
-        Used only for test applications - sampleClient and sampleResource
-    --> 
-    <authentication-manager id="testAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
+    <authentication-manager alias="authenticationManager" xmlns="http://www.springframework.org/schema/security">
+        <authentication-provider user-service-ref="clientDetailsUserService" />
+        <!--  Here goes real authentication provider, like LDAP authentication provider -->
         <authentication-provider>
             <user-service id="userDetailsService">
-                <user name="oi" password="secret" authorities="ROLE_USER" />
+                <user name="marissa" password="koala" authorities="ROLE_USER" />
+                <user name="paul" password="emu" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>
     </authentication-manager>
-    
+        
 	<bean id="clientDetailsUserService"
 		class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
 		<constructor-arg ref="clientDetails" />
@@ -142,20 +117,16 @@
 		<property name="username" value="${clientStoreDataSource.username}" />
 		<property name="password" value="${clientStoreDataSource.password}" />
 	</bean>
-	
-	<bean id="userStoreDataSource" class="org.apache.commons.dbcp.BasicDataSource"
-        destroy-method="close">
-        <property name="driverClassName" value="${userStoreDataSource.driverClassName}" />
-        <property name="url" value="${userStoreDataSource.url}" />
-        <property name="username" value="${userStoreDataSource.username}" />
-        <property name="password" value="${userStoreDataSource.password}" />
-    </bean>
 
 	<oauth:authorization-server
-		client-details-service-ref="clientDetails" token-services-ref="tokenServices"
+		client-details-service-ref="clientDetails"
+		token-services-ref="tokenServices"
 		user-approval-handler-ref="userApprovalHandler">
-		<oauth:authorization-code />
-		<oauth:client-credentials />
+		<oauth:authorization-code/>
+        <oauth:implicit/>
+        <oauth:refresh-token/>
+        <oauth:client-credentials/>
+        <oauth:password/>
 	</oauth:authorization-server>
 
 	<bean id="userApprovalHandler"
