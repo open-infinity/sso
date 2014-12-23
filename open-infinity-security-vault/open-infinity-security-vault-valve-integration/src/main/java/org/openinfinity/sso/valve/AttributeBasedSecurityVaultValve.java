@@ -15,11 +15,6 @@
  */
 package org.openinfinity.sso.valve;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.valves.ValveBase;
@@ -29,6 +24,10 @@ import org.openinfinity.sso.security.util.GlobalVariables;
 import org.openinfinity.sso.security.util.PropertiesUtil;
 import org.openinfinity.sso.valve.mapper.RequestToAttributeMapper;
 import org.openinfinity.sso.valve.mapper.RequestToIdentityMapper;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Security vault intercepts every request and looks for a session id. 
@@ -67,15 +66,15 @@ public class AttributeBasedSecurityVaultValve extends ValveBase {
 	@Override
 	public void invoke(Request request, Response response) throws IOException, ServletException {
 		String sessionId = (String) request.getAttribute(SESSION_IDENTIFIER);
-		LOGGER.info("Request intercepted by security valve. The session id is [" + sessionId + "]");
+		LOGGER.fine("Request intercepted by security valve. The session id is [" + sessionId + "]");
 		if (sessionId != null && IdentityContext.loadIdentity(sessionId) == null) {
-			LOGGER.info("Identity provider session id found from the request as [" + sessionId + "]");
+			LOGGER.fine("Identity provider session id found from the request as [" + sessionId + "]");
 			RequestToIdentityMapper requestToAttributeMapper = new RequestToAttributeMapper();
 			Identity identity = requestToAttributeMapper.map(request);
-			LOGGER.info("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
+			LOGGER.fine("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
 			IdentityContext.storeIdentity(sessionId, identity);
 			request.setUserPrincipal(identity.getUserPrincipal());
-			LOGGER.info("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
+			LOGGER.fine("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
 		}
 		getNext().invoke(request, response);
 	}
