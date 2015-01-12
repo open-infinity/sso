@@ -21,6 +21,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.openinfinity.sso.security.context.grid.IdentityContext;
 import org.openinfinity.sso.security.util.GlobalVariables;
@@ -60,7 +61,10 @@ public class InjectableSecurityContextFilterBean extends GenericFilterBean {
 		LOGGER.debug("Initializing InjectableSecurityContextFilterBean for Spring security.");
 		if (SecurityContextHolder.getContext() != null 
 				&& SecurityContextHolder.getContext().getAuthentication() == null) {
-			String sessionId = (String) request.getAttribute(SESSION_IDENTIFIER);
+			HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+			String sessionId = 
+					request.getAttribute(SESSION_IDENTIFIER) != null ? (String) request.getAttribute(SESSION_IDENTIFIER) :
+						((httpServletRequest.getHeader(SESSION_IDENTIFIER) != null) ? (String) httpServletRequest.getAttribute(SESSION_IDENTIFIER) : null); 
 			if (sessionId != null) {
 				LOGGER.debug("Session identifier [" + sessionId + "] found from the request.");
 				eraseSecurityContext(sessionId);
