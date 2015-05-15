@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openinfinity.sso</groupId>
 	<artifactId>open-infinity-security-vault</artifactId>
-	<version>1.1.0.RELEASE</version>
+	<version>1.2.0.RELEASE</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>open-infinity-security-vault-ss-integration</module>
@@ -14,34 +14,34 @@
 		<dependency>
 			<groupId>org.openinfinity</groupId>
 			<artifactId>open-infinity-core</artifactId>
-			<version>2.0.0.RELEASE</version>
+			<version>3.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.8</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.8</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
-			<version>7.0.25</version>
+			<version>8.0.22</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-servlet-api</artifactId>
-			<version>7.0.25</version>
+			<version>8.0.22</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-coyote</artifactId>
-			<version>7.0.25</version>
+			<version>8.0.22</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -59,19 +59,19 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
+			<version>1.7.12</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>open-infinity-security-vault</artifactId>
 		<groupId>org.openinfinity.sso</groupId>
-		<version>1.1.0.RELEASE</version>
+		<version>1.2.0.RELEASE</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>open-infinity-security-vault-valve-integration</artifactId>
@@ -12,18 +12,18 @@
 		<dependency>
 			<artifactId>open-infinity-security-vault-common</artifactId>
 			<groupId>org.openinfinity.sso</groupId>
-			<version>1.1.0.RELEASE</version>
+			<version>1.2.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.0.1.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>3.2.5.RELEASE</version>
+			<version>4.0.1.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
