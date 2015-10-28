@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 the original author or authors.
+ * Copyright (c) 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,25 @@
  */
 package org.openinfinity.sso.common.ss.sp;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
+
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.*;
+import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * An HTTP message converter that reads a plain text OpenAM REST interface user property
@@ -33,6 +42,7 @@ import java.util.*;
  * @author Mika Salminen
  * @author Ilkka Leinonen
  * @since 1.0.0
+ * @version 1.1.0
  */
 public class SpringAuthenticationMessageConverter
         extends AbstractHttpMessageConverter<Authentication> {
@@ -69,8 +79,8 @@ public class SpringAuthenticationMessageConverter
                 stringHttpMessageConverter.read(String.class, inputMessage);
         Scanner resultScanner = new Scanner(resultString);
         Map<String, String> properties = new HashMap<String, String>();
-        Collection<GrantedAuthorityImpl> authorities =
-                new HashSet<GrantedAuthorityImpl>();
+        Collection<GrantedAuthority> authorities =
+                new HashSet<GrantedAuthority>();
         String name = null, attributeName = null;
         boolean collectingAttributeValues = false;
         while (resultScanner.hasNextLine()) {
@@ -86,9 +96,16 @@ public class SpringAuthenticationMessageConverter
                 collectingAttributeValues = true;
             } else if (collectingAttributeValues &&
                     resultLine.startsWith("userdetails.attribute.value")) {
-                String value = valueFrom(resultLine);
+                final String value = valueFrom(resultLine);
                 if (attributeName.equals("memberof")) {
-                    authorities.add(new GrantedAuthorityImpl(value));
+                    authorities.add(new GrantedAuthority() {
+
+						@Override
+						public String getAuthority() {
+							return value;
+						}
+                    	
+                    });
                 } else {
                     if (attributeName.equals("screenname")) {
                         name = value;
