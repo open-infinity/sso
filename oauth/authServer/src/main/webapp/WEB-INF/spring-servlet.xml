@@ -42,17 +42,16 @@
         <custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER" />
 		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
-	
-	<http access-denied-page="/login.jsp?authorization_error=true" disable-url-rewriting="true"
-        xmlns="http://www.springframework.org/schema/security">
-        <intercept-url pattern="/oauth/**" access="ROLE_USER" />
-        <intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 
-        <form-login authentication-failure-url="/login.jsp?authentication_error=true" default-target-url="/index.jsp"
-            login-page="/login.jsp" login-processing-url="/login.do" />
-        <logout logout-success-url="/index.jsp" logout-url="/logout.do" />
-        <anonymous />
-    </http>
+	<sec:http auto-config="true" disable-url-rewriting="true">
+		<sec:access-denied-handler error-page="/login.jsp?authorization_error=true" />
+		<sec:intercept-url pattern="/oauth/**" access="ROLE_USER" />
+		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<sec:form-login authentication-failure-url="/login.jsp?authentication_error=true" default-target-url="/index.jsp"
+					login-page="/login.jsp" login-processing-url="/login.do" />
+		<sec:logout logout-success-url="/index.jsp" logout-url="/logout.do" />
+		<sec:anonymous />
+	</sec:http>
 	
 	<!-- ** NOTE! ** This application contains only Spring Security Settings 
 		for accessing web services to manage tokens. This version assumes OpenInfinity 
