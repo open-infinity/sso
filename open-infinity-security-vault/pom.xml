@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openinfinity.sso</groupId>
 	<artifactId>open-infinity-security-vault</artifactId>
-	<version>1.3.0.RELEASE</version>
+	<version>1.3.1.RELEASE</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>open-infinity-security-vault-ss-integration</module>

@@ -74,10 +74,15 @@ public class HeaderBasedSecurityVaultValve extends ValveBase {
 			LOGGER.info("Identity provider session id found from the request as [" + sessionId + "]");
 			RequestToIdentityMapper requestToAttributeMapper = new RequestToHeaderMapper();
 			Identity identity = requestToAttributeMapper.map(request);
-			LOGGER.info("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
+			String principalName = (
+					identity != null && 
+					identity.getUserPrincipal() != null && 
+					identity.getUserPrincipal().getName() != null) ? 
+							identity.getUserPrincipal().getName() : "user name missing.";
+			LOGGER.info("Identity session found from the request for [" + principalName + "]");
 			IdentityContext.storeIdentity(sessionId, identity);
 			request.setUserPrincipal(identity.getUserPrincipal());
-			LOGGER.info("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
+			LOGGER.info("Security context updated for [" + principalName + "]");
 		}
 		getNext().invoke(request, response);
 	}
