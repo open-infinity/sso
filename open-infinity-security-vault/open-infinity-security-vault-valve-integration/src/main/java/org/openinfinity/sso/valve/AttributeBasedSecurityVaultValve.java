@@ -51,12 +51,22 @@ public class AttributeBasedSecurityVaultValve extends ValveBase {
 	 * Represents the unique identifier of the session cookie name.
 	 */
 	private static String SESSION_IDENTIFIER = null;
+
+    /**
+     * Should valve also set principal in request. Defaults to true.
+     */
+    private static boolean SHOULD_SET_USER_PRINCIPAL = true;
 	
 	static {
 		if (SESSION_IDENTIFIER == null) {
 			PropertiesUtil.init();
 			SESSION_IDENTIFIER = PropertiesUtil.loadValue(GlobalVariables.ATTRIBUTE_BASED_SESSION_KEY);
 		}
+
+        String shouldSetUserPrincipal = PropertiesUtil.loadValue(GlobalVariables.ATTRIBUTE_BASED_SHOULD_SET_PRINCIPAL);
+        if(shouldSetUserPrincipal != null) {
+            SHOULD_SET_USER_PRINCIPAL = Boolean.parseBoolean(shouldSetUserPrincipal);
+        }
 	}
 	
 	/**
@@ -67,15 +77,19 @@ public class AttributeBasedSecurityVaultValve extends ValveBase {
 	@Override
 	public void invoke(Request request, Response response) throws IOException, ServletException {
 		String sessionId = (String) request.getAttribute(SESSION_IDENTIFIER);
-		LOGGER.info("Request intercepted by security valve. The session id is [" + sessionId + "]");
+		LOGGER.finer("Request intercepted by security valve. The session id is [" + sessionId + "]");
 		if (sessionId != null && IdentityContext.loadIdentity(sessionId) == null) {
-			LOGGER.info("Identity provider session id found from the request as [" + sessionId + "]");
+			LOGGER.fine("Identity provider session id found from the request as [" + sessionId + "]");
 			RequestToIdentityMapper requestToAttributeMapper = new RequestToAttributeMapper();
 			Identity identity = requestToAttributeMapper.map(request);
-			LOGGER.info("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
+			LOGGER.fine("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
 			IdentityContext.storeIdentity(sessionId, identity);
-			request.setUserPrincipal(identity.getUserPrincipal());
-			LOGGER.info("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
+
+            if(SHOULD_SET_USER_PRINCIPAL) {
+                request.setUserPrincipal(identity.getUserPrincipal());
+            }
+
+			LOGGER.fine("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
 		}
 		getNext().invoke(request, response);
 	}
