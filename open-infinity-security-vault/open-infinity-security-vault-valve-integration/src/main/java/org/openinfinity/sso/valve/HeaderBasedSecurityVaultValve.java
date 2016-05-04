@@ -81,7 +81,9 @@ public class HeaderBasedSecurityVaultValve extends ValveBase {
 							identity.getUserPrincipal().getName() : "user name missing.";
 			LOGGER.info("Identity session found from the request for [" + principalName + "]");
 			IdentityContext.storeIdentity(sessionId, identity);
-			request.setUserPrincipal(identity.getUserPrincipal());
+			if (identity.getUserPrincipal() != null) {
+				request.setUserPrincipal(identity.getUserPrincipal());
+			}
 			LOGGER.info("Security context updated for [" + principalName + "]");
 		}
 		getNext().invoke(request, response);
