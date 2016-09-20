@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 the original author or authors.
+ * Copyright (c) 2013-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ import org.openinfinity.sso.valve.mapper.RequestToIdentityMapper;
  *  
  *  
  * @author Ilkka Leinonen
- * @version 1.0.0
+ * @author Niko Steen
+ * @version 1.1.0
  * @since 1.0.0
  */
 public class AttributeBasedSecurityVaultValve extends ValveBase {
@@ -51,12 +52,22 @@ public class AttributeBasedSecurityVaultValve extends ValveBase {
 	 * Represents the unique identifier of the session cookie name.
 	 */
 	private static String SESSION_IDENTIFIER = null;
+
+    /**
+     * Should valve also set principal in request. Defaults to true.
+     */
+    private static boolean SHOULD_SET_USER_PRINCIPAL = true;
 	
 	static {
 		if (SESSION_IDENTIFIER == null) {
 			PropertiesUtil.init();
 			SESSION_IDENTIFIER = PropertiesUtil.loadValue(GlobalVariables.ATTRIBUTE_BASED_SESSION_KEY);
 		}
+
+        String shouldSetUserPrincipal = PropertiesUtil.loadValue(GlobalVariables.ATTRIBUTE_BASED_SHOULD_SET_PRINCIPAL);
+        if(shouldSetUserPrincipal != null) {
+            SHOULD_SET_USER_PRINCIPAL = Boolean.parseBoolean(shouldSetUserPrincipal);
+        }
 	}
 	
 	/**
@@ -67,24 +78,38 @@ public class AttributeBasedSecurityVaultValve extends ValveBase {
 	@Override
 	public void invoke(Request request, Response response) throws IOException, ServletException {
 		String sessionId = (String) request.getAttribute(SESSION_IDENTIFIER);
-		LOGGER.info("Request intercepted by security valve. The session id is [" + sessionId + "]");
+		LOGGER.finer("Request intercepted by security valve. The session id is [" + sessionId + "]");
 		if (sessionId != null && IdentityContext.loadIdentity(sessionId) == null) {
-			LOGGER.info("Identity provider session id found from the request as [" + sessionId + "]");
+			LOGGER.fine("Identity provider session id found from the request as [" + sessionId + "]");
 			RequestToIdentityMapper requestToAttributeMapper = new RequestToAttributeMapper();
 			Identity identity = requestToAttributeMapper.map(request);
+
 			String principalName = (
 					identity != null && 
 					identity.getUserPrincipal() != null && 
 					identity.getUserPrincipal().getName() != null) ? 
 							identity.getUserPrincipal().getName() : "user name missing.";
-			LOGGER.info("Identity session found from the request for [" + principalName + "]");
+			LOGGER.info("Identity session found from the request for [" + principalName + "]");	
 			IdentityContext.storeIdentity(sessionId, identity);
+			LOGGER.info("Security context updated for [" + principalName + "]");
+			LOGGER.fine("Identity session found from the request for [" + identity.getUserPrincipal().getName() + "]");
+            setUserPrincipal(request, identity);
+			LOGGER.fine("Security context updated for [" + identity.getUserPrincipal().getName() + "]");
+		}
+		getNext().invoke(request, response);
+	}
+
+	/**
+	 * Sets user principal if defined in the properties file as true (default).
+	 * @param request HTTP Request provided through AJP or Java Servlet channel.
+	 * @param identity <code>org.openinfinity.core.security.principal.Identity</code> object will be stored for every in-memory datagrid member node.
+	 */
+	private void setUserPrincipal(Request request, Identity identity) {
+		if (SHOULD_SET_USER_PRINCIPAL) {
 			if (identity.getUserPrincipal() != null) {
 				request.setUserPrincipal(identity.getUserPrincipal());
 			}
-			LOGGER.info("Security context updated for [" + principalName + "]");
 		}
-		getNext().invoke(request, response);
 	}
 
 }

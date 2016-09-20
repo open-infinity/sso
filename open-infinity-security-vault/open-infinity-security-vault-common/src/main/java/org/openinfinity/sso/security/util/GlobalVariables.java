@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 the original author or authors.
+ * Copyright (c) 2013-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,13 @@ public interface GlobalVariables {
 	/**
 	 * Represents the attribute based user's session attributes key fetched from the properties file.
 	 */
-	public static final String ATTRIBUTE_BASED_USER_ATTRIBUTES = "sso.attribute.session.attributes"; 
+	public static final String ATTRIBUTE_BASED_USER_ATTRIBUTES = "sso.attribute.session.attributes";
+
+    /**
+     * Represents the configuration key for attribute based valve. Valve will set principal in request
+     * (default behavior). In case setting principal is not wanted, this should be set as false.
+     */
+    public static final String ATTRIBUTE_BASED_SHOULD_SET_PRINCIPAL = "sso.attribute.should.set.principal";
 
 	/**
 	 * Represents the configuration key for header based session from the properties file.
@@ -103,5 +109,5 @@ public interface GlobalVariables {
 	 * Security vault properties location identifier.
 	 */
 	public static final String SECURITY_VAULT_PROPERTIES_FILE_LOCATION = "security.vault.properties.file";
-	
+
 }
